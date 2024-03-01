@@ -10,7 +10,7 @@ function FilterComponent({ label, options }) {
     setSearchParams(searchParams);
   };
   return (
-    <div className="w-[250px] py-4 font-overpass">
+    <div className="w-[250px] py-4 ">
       <label
         htmlFor="sort-by"
         className="block mb-2 text-sm font-medium text-primary dark:text-white capitalize">

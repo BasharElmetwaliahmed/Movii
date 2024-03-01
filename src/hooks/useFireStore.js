@@ -1,4 +1,11 @@
-import { collection, deleteDoc, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+} from "firebase/firestore";
 import { useCallback, useState } from "react";
 import { db } from "../services/firebase";
 
@@ -19,7 +26,6 @@ function useFireStore() {
   };
 
   const checkInWatchList = async (userId, dataId) => {
-    console.log(userId, dataId);
     const docRef = doc(
       db,
       "users",
@@ -50,15 +56,23 @@ function useFireStore() {
     }
   };
 
-   const getWatchlist = useCallback(async (userId) => {
-     const querySnapshot = await getDocs(
-       collection(db, "users", userId, "watchlist")
-     );
-     const data = querySnapshot.docs.map((doc) => ({
-       ...doc.data(),
-     }));
-     return data;
-   }, []);
+  const getWatchlist = useCallback(async (userId) => {
+    setLoading(true);
+    try {
+      const querySnapshot = await getDocs(
+        collection(db, "users", userId, "watchlist")
+      );
+      const data = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+      }));
+      return data;
+    } catch (err) {
+      console.log(err);
+    }
+    finally{
+      setLoading(false);
+    }
+  }, []);
   return {
     addToWatchList,
     isLoading,

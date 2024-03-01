@@ -9,6 +9,9 @@ import DetailPage from "./pages/DetailPage";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import WatchList from "./pages/WatchList";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+import { DarkModeProvider } from "./context/DarkModeContext";
 
 const router = createBrowserRouter([
   {
@@ -48,9 +51,20 @@ const router = createBrowserRouter([
 ]);
 function App() {
   return (
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <DarkModeProvider>
+      <AuthProvider>
+        <RouterProvider router={router} />
+        <ToastContainer
+          theme={"dark"}
+          position="top-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          closeOnClick={true}
+          draggable={true}
+          className="md:w-fit w-3/4 mx-auto"
+        />
+      </AuthProvider>
+    </DarkModeProvider>
   );
 }
 

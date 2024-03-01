@@ -31,10 +31,12 @@ function TvShows() {
     fetchData();
   }, [searchParams]);
   return (
-    <div className="bg-bkg py-4 font-overpass">
+    <div className=" py-4 ">
       <div className="container py-14 ">
         <div className="flex justify-between items-center">
-          <h2 className="text-primary text-6xl">Discover Tv</h2>
+          <h2 className="dark:text-white text-lightext font-bebas text-4xl   md:text-6xl">
+            Discover Tv
+          </h2>
         </div>
         <FilterComponent
           label="sort"
@@ -47,9 +49,13 @@ function TvShows() {
           ]}
         />
 
-        <div className="grid grid-cols-5 gap-6 rounded-md justify-between py-4">
-          {tvshows?.results?.map((item) =>
-            loading ? <SkeletonCard /> : <Card type='tv' key={item?.id} item={item} />
+        <div className="grid grid-cols-1  sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 rounded-md  py-4">
+          {tvshows?.results?.map((item,i) =>
+            loading ? (
+              <SkeletonCard key={i} />
+            ) : (
+              <Card type="tv" key={item?.id} item={item} />
+            )
           )}
         </div>
         {tvshows?.total_pages > 1 && (

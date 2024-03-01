@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { backPath } from "../services/api";
-import { MdStarRate } from "react-icons/md";
 import RateComponent from "./RateComponent";
 
 function Card({ item, type }) {
@@ -11,17 +10,19 @@ function Card({ item, type }) {
       <img
         src={`${backPath}/${item.poster_path}`}
         alt={item?.name || item?.title}
-        className=" rounded-md h-[400px] "
+        className=" rounded-md w-full sm:w-auto sm:h-[400px] "
       />
       <div className="flex flex-col py-4 gap-1">
         <div className="flex justify-between">
-          <h4 className="text-primary">{item?.name || item?.title}</h4>
+          <h4 className="dark:text-primary  font-semibold text-lightext">
+            {item?.name || item?.title}
+          </h4>
           <p className="capitalize text-secondarydark text-xs  ">
             {item?.media_type}
           </p>
         </div>
         {release_year && (
-          <span className="text-white">
+          <span className="dark:text-white text-lightext">
             {new Date(
               item?.first_air_date || item?.release_date
             )?.getFullYear()}

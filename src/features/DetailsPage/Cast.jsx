@@ -5,20 +5,39 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { backPath, orignalPath } from "../../services/api";
 
+import  UnkownImage from '../../assets/71OUY6TSvvL (1).jpg'
 function Cast({cast}) {
   return (
-    <div className="bg-dark py-8">
-      <h2 className='py-8 text-primary text-5xl'>Cast</h2>  
-      <Swiper spaceBetween={50} slidesPerView={5}>
-        {cast.slice(0,10).map((item) => (
+    <div className=" py-8">
+      <h2 className="py-8 dark:text-white font-bebas text-lightext text-5xl">Cast</h2>
+      <Swiper spaceBetween={50}  breakpoints={ {
+          640: {
+            slidesPerView: 2,
+            spaceBetween: 20,
+          },
+          768: {
+            slidesPerView: 4,
+            spaceBetween: 40,
+          },
+          1024: {
+            slidesPerView: 5,
+            spaceBetween: 50,
+          },
+      }}>
+        {cast.slice(0, 10).map((item) => (
           <SwiperSlide key={item.id}>
             <img
-              src={`${orignalPath}/${item?.profile_path}`}
+              src={
+                item.profile_path
+                  ? `${orignalPath}/${item.profile_path}`
+                  : UnkownImage
+              }
               alt={item.name}
-              className=" rounded-md"
-              
+              className=" rounded-md "
             />
-            <h3 className="py-2 text-center text-white">{item?.name}</h3>
+            <h3 className="py-2 text-center dark:text-white text-lightext">
+              {item?.name}
+            </h3>
           </SwiperSlide>
         ))}
       </Swiper>

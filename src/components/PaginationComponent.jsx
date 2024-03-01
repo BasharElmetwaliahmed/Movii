@@ -19,10 +19,13 @@ function PaginationComponent({count}) {
       setSearchParams(searchParams);
     };
   
-  const paginatebtns = `flex items-center gap-2 hover:text-secondary duration-75 disabled:cursor-not-allowed cursor-pointer disabled:text-primary disabled:opacity-50 `;
+  const paginatebtns = `flex items-center gap-2 hover:text-secondary duration-75 disabled:cursor-not-allowed cursor-pointer disabled:dark:text-white disabled:text-lightext disabled:opacity-50 `;
   return (
-    <div className="text-primary flex gap-4 items-center  font-overpass  bg-black w-fit rounded-md py-1 px-2">
-      <button className={paginatebtns} onClick={prevHandler} disabled={currentPage===1}>
+    <div className="dark:text-white text-lightext flex gap-4 items-center   dark:bg-black bg-primary border-[1px] border-secondary w-fit rounded-md py-1 px-2">
+      <button
+        className={paginatebtns}
+        onClick={prevHandler}
+        disabled={currentPage === 1}>
         <GrFormPrevious />
         prev
       </button>
