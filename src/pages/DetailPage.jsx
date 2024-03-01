@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { backPath, getCast, getDetails, orignalPath } from "../services/api";
+import {
+  backPath,
+  getCast,
+  getDetails,
+  getRecommendations,
+  orignalPath,
+} from "../services/api";
 import { CiCalendar } from "react-icons/ci";
 import { convertToPercentage, getRateColor } from "../utils/helpers";
 import { IoMdAdd } from "react-icons/io";
@@ -10,13 +16,16 @@ import { useAuth } from "../context/AuthContext";
 import { IoMdRemove } from "react-icons/io";
 import { toast } from "react-toastify";
 import FullScreen from "../components/FullScreen";
+import Recommendations from "../features/DetailsPage/Recommendations";
 
 function DetailPage() {
   const { id, type } = useParams();
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
   const [cast, setCast] = useState([]);
+  const [recommendations, setRecommendations] = useState([]);
   const [isInWatchList, setIsInWatchList] = useState(false);
+  const [video,setVideos] = useState([]);
   const { addToWatchList, isLoading, checkInWatchList, removeFromWatchlist } =
     useFireStore();
   const { user } = useAuth();
@@ -24,12 +33,16 @@ function DetailPage() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [details, castData] = await Promise.all([
+        const [details, castData, recommendData] = await Promise.all([
           getDetails(type, id),
           getCast(type, id),
+          getRecommendations(type, id),
         ]);
         setData(details);
         setCast(castData.cast);
+        setRecommendations(recommendData.results);
+        console.log(details);
+        console.log(castData);
       } catch (err) {
         console.log(err);
       } finally {
@@ -49,9 +62,12 @@ function DetailPage() {
     });
   }, [id, user]);
 
-  if (loading) return <FullScreen >
-    <span className="loader"></span>
-  </FullScreen>;
+  if (loading)
+    return (
+      <FullScreen>
+        <span className="loader"></span>
+      </FullScreen>
+    );
   const title = data?.name || data?.title;
   const releaseDate = data?.release_date || data?.first_air_date;
   const border = `border-${getRateColor(data?.vote_average)}`;
@@ -70,9 +86,14 @@ function DetailPage() {
       await addToWatchList(user.uid, data.id, newData);
       const res = await checkInWatchList(`${user.uid}`, `${data.id}`);
       setIsInWatchList(res);
-      toast.success(`${type==='tv'?'Tv series':'Movie'} added to watchlist successfully`, {
-        position: "top-right",
-      });
+      toast.success(
+        `${
+          type === "tv" ? "Tv series" : "Movie"
+        } added to watchlist successfully`,
+        {
+          position: "top-right",
+        }
+      );
     } else {
       toast.error("You Should be logged in", {
         position: "top-right",
@@ -84,14 +105,14 @@ function DetailPage() {
     await removeFromWatchlist(`${user.uid}`, `${data.id}`);
     const res = await checkInWatchList(`${user.uid}`, `${data.id}`);
     setIsInWatchList(res);
-          toast.success(
-            `${
-              type === "tv" ? "Tv series" : "Movie"
-            } removed from watchlist successfully`,
-            {
-              position: "top-right",
-            }
-          );
+    toast.success(
+      `${
+        type === "tv" ? "Tv series" : "Movie"
+      } removed from watchlist successfully`,
+      {
+        position: "top-right",
+      }
+    );
   };
   const buttonsStyle = `relative z-10 border-[1px] hover:cursor-pointer h-fit flex items-center gap-2   px-3 py-2 rounded-md hover:opacity-50`;
   return (
@@ -115,14 +136,18 @@ function DetailPage() {
             <div className="flex flex-col gap-1 justify-center text-primary">
               <h3 className=" md:text-4xl text-2xl font-bold">
                 {title}{" "}
-                <span className="font-extralight">
-                  {new Date(releaseDate)?.getFullYear()}
-                </span>
+                {!isNaN(new Date(releaseDate)?.getFullYear()) && (
+                  <span className="font-extralight">
+                    {new Date(releaseDate)?.getFullYear()}
+                  </span>
+                )}
               </h3>
-              <p className="flex items-center gap-2 md:text-2xl text-sm ">
-                <CiCalendar />
-                {new Date(releaseDate)?.toLocaleDateString("en-US")} (US)
-              </p>
+              {!isNaN(new Date(releaseDate)?.getFullYear()) && (
+                <p className="flex items-center gap-2 md:text-2xl text-sm ">
+                  <CiCalendar />
+                  {new Date(releaseDate)?.toLocaleDateString("en-US")} (US)
+                </p>
+              )}
               <div className="flex gap-7 md:items-center md:flex-row flex-col  ">
                 <div className="flex items-center gap-2">
                   <div className="w-[70px] h-[70px] bg-bkg rounded-full relative flex justify-center items-center   ">
@@ -163,7 +188,9 @@ function DetailPage() {
               )}
               <div>
                 <h5 className=" text-base md:text-lg font-bold">Overview</h5>
-                <p className="opacity-90 md:text-base text-sm tracking-wide leading-7">{data?.overview}</p>
+                <p className="opacity-90 md:text-base text-sm tracking-wide leading-7">
+                  {data?.overview}
+                </p>
               </div>
               {data?.genres && (
                 <div className="flex gap-2">
@@ -180,9 +207,10 @@ function DetailPage() {
           </div>
         </div>
       </div>
-        <div className="container">
-          <Cast cast={cast} />
-        </div>
+      <div className="container">
+        <Cast cast={cast} />
+        <Recommendations recommendations={recommendations} type={type} />
+      </div>
     </>
   );
 }

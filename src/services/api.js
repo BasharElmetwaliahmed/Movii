@@ -1,3 +1,4 @@
+import { async } from "@firebase/util";
 import axios from "axios";
 
 const BASE_URL = "https://api.themoviedb.org/3";
@@ -51,4 +52,15 @@ export const searchAll =  async (query)=>{
   return res.data;
 }
 
-export const 
+export const getRecommendations = async (type, id) => {
+    const res = await axios.get(
+      `${BASE_URL}/${type}/${id}/recommendations?api_key=${apiKey}`
+    );
+    return res.data;
+}
+
+export const getVideos =async(type,id)=>{
+  const res = await axios.get(`${BASE_URL}/${type}/${id}/videos?api_key=${apiKey}`)
+  return res.data
+
+}

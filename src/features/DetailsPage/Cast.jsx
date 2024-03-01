@@ -3,10 +3,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
 import "swiper/css";
-import { backPath, orignalPath } from "../../services/api";
+import {  orignalPath } from "../../services/api";
 
 import  UnkownImage from '../../assets/71OUY6TSvvL (1).jpg'
 function Cast({cast}) {
+  if(cast.length===0) return;
   return (
     <div className=" py-8">
       <h2 className="py-8 dark:text-white font-bebas text-lightext text-5xl">Cast</h2>
