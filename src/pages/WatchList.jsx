@@ -13,7 +13,6 @@ function WatchList() {
     if (user) {
       getWatchlist(`${user.uid}`).then((data) => {
         setWatchList(data);
-        console.log(data);
       });
     }
   }, [user, getWatchlist]);

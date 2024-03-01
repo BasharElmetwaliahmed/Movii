@@ -1,32 +1,48 @@
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useLocation } from "react-router-dom";
 import { FaSearch, FaRegUserCircle } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
 import { MdLogout } from "react-icons/md";
 import { CiMenuBurger } from "react-icons/ci";
-import { IoSunnyOutline,IoMoonOutline } from "react-icons/io5";
+import { IoSunnyOutline, IoMoonOutline } from "react-icons/io5";
 
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { useDarkMode } from "../context/DarkModeContext";
+import { useEffect } from "react";
 function NavBar() {
   const { user, signUp, logOut, isLoading } = useAuth();
   const { isDarkMode, changeMode } = useDarkMode();
-  const [open,setIsOpen] = useState(false)
-  const links = [
-    {
-      label: "Movies",
-      path: "movies",
-    },
-    {
-      label: "Tv Shows",
-      path: "tv",
-    },
-    {
-      label: <FaSearch />,
-      path: "search",
-    },
+  const location = useLocation();
 
-  ];
+  const [open, setIsOpen] = useState(false);
+const [top, setTop] = useState(true);
+
+useEffect(() => {
+  const scrollHandler = () => {
+    window.scrollY > 10 ? setTop(false) : setTop(true);
+  };
+  window.addEventListener("scroll", scrollHandler);
+  return () => window.removeEventListener("scroll", scrollHandler);
+}, [top]);
+
+  useEffect(()=>{
+    setIsOpen(false)
+  },[location])
+
+    const links = [
+      {
+        label: "Movies",
+        path: "movies",
+      },
+      {
+        label: "Tv Shows",
+        path: "tv",
+      },
+      {
+        label: <FaSearch />,
+        path: "search",
+      },
+    ];
   const btniconStyle =
     " dark:text-white text-lightext flex items-center text-xl md:text-2xl hover:text-primaryhover outline-none";
   const loginHandler = async () => {
@@ -56,7 +72,7 @@ function NavBar() {
       : "hover:text-primaryhover flex items-center";
 
   return (
-    <div className="dark:bg-dark bg-primary fixed w-full top-0 z-40">
+    <div className={`${!top && 'shadow-lg'} dark:bg-dark bg-primary fixed w-full top-0 z-40`}>
       <div className="container py-2 flex justify-between items-center">
         <Link to="/">
           <h1 className="text-secondary text-6xl font-bebas font-bold tracking-widest">

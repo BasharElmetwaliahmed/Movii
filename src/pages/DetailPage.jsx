@@ -5,6 +5,7 @@ import {
   getCast,
   getDetails,
   getRecommendations,
+  getVideos,
   orignalPath,
 } from "../services/api";
 import { CiCalendar } from "react-icons/ci";
@@ -17,6 +18,7 @@ import { IoMdRemove } from "react-icons/io";
 import { toast } from "react-toastify";
 import FullScreen from "../components/FullScreen";
 import Recommendations from "../features/DetailsPage/Recommendations";
+import Videos from "../features/DetailsPage/Videos";
 
 function DetailPage() {
   const { id, type } = useParams();
@@ -25,7 +27,8 @@ function DetailPage() {
   const [cast, setCast] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
   const [isInWatchList, setIsInWatchList] = useState(false);
-  const [video,setVideos] = useState([]);
+  const [trailer, setTrailer] = useState(null);
+  const [videos, setVideos] = useState([]);
   const { addToWatchList, isLoading, checkInWatchList, removeFromWatchlist } =
     useFireStore();
   const { user } = useAuth();
@@ -33,16 +36,23 @@ function DetailPage() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [details, castData, recommendData] = await Promise.all([
-          getDetails(type, id),
-          getCast(type, id),
-          getRecommendations(type, id),
-        ]);
+        const [details, castData, recommendData, videosData] =
+          await Promise.all([
+            getDetails(type, id),
+            getCast(type, id),
+            getRecommendations(type, id),
+            getVideos(type, id),
+          ]);
+        const video = videosData?.results.find(
+          (item) => item.type === "Trailer"
+        );
+        const videos= videosData?.results.filter(item=>item.type!=='Trailer')
+        setTrailer(video);
+        setVideos(videos)
         setData(details);
         setCast(castData.cast);
         setRecommendations(recommendData.results);
-        console.log(details);
-        console.log(castData);
+
       } catch (err) {
         console.log(err);
       } finally {
@@ -126,7 +136,7 @@ function DetailPage() {
         }}
         className="md:h-[500px] h-auto  relative ">
         <div className="absolute top-0 left-0 bg-black opacity-60 h-full w-full z-[0] "></div>
-        <div className="container py-6 relative z-10">
+        <div className="container py-10 relative z-10">
           <div className="flex md:flex-row flex-col gap-4 item-center">
             <img
               src={`${backPath}/${data?.poster_path}`}
@@ -170,7 +180,7 @@ function DetailPage() {
                   ) : (
                     <button
                       onClick={removeFromWatchListHander}
-                      className={`border-green-500 text-green-500  ${buttonsStyle}`}>
+                      className={`border-green-500 text-green-500 w-fit  ${buttonsStyle}`}>
                       <IoMdRemove />
                       Remove From Watch list
                     </button>
@@ -209,6 +219,7 @@ function DetailPage() {
       </div>
       <div className="container">
         <Cast cast={cast} />
+        <Videos videos={videos} trailer={trailer}/>
         <Recommendations recommendations={recommendations} type={type} />
       </div>
     </>

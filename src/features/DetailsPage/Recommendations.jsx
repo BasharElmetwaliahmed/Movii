@@ -4,7 +4,6 @@ import React from "react";
 import Card from "../../components/Card";
 
 function Recommendations({ recommendations, type }) {
-  console.log(recommendations);
   if(recommendations.length===0) return;
   return (
     <div className=" py-10">
