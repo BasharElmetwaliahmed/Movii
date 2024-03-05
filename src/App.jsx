@@ -12,6 +12,7 @@ import WatchList from "./pages/WatchList";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { DarkModeProvider } from "./context/DarkModeContext";
+import NotFoundPage from "./pages/NotFoundPage";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,7 @@ const router = createBrowserRouter([
         path: "/:type/:id",
         element: <DetailPage />,
       },
+
       {
         path: "/watchlist",
         element: (
@@ -45,6 +47,10 @@ const router = createBrowserRouter([
             <WatchList />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: "*",
+        element: <NotFoundPage />,
       },
     ],
   },

@@ -82,7 +82,7 @@ useEffect(() => {
 
         <div
           className={`dark:text-white text-lightext flex gap-11 transition-all duration-300 md:flex-row md:bg-transparent
-         dark:bg-black bg-gray-100 shadow-md md:shadow-none right-0 flex-col md:relative fixed top-[76px] md:top-0 md:w-fit w-3/4 md:h-full 
+         dark:bg-dark dark:lg:bg-transparent bg-gray-100 shadow-md md:shadow-none right-0 flex-col md:relative fixed top-[76px] md:top-0 md:w-fit w-3/4 md:h-full 
         h-[calc(100vh-76px)] py-8 md:py-0 text-center items-center ${
           open ? "translate-x-0" : "translate-x-[1000px]"
         } md:translate-x-0   text-lg `}>
