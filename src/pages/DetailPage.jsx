@@ -134,7 +134,7 @@ function DetailPage() {
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center center",
         }}
-        className="md:h-[500px] h-auto  relative ">
+        className="md:min-h-[500px] h-auto  relative ">
         <div className="absolute top-0 left-0 bg-black opacity-60 h-full w-full z-[0] "></div>
         <div className="container py-10 relative z-10">
           <div className="flex md:flex-row flex-col gap-4 item-center">
